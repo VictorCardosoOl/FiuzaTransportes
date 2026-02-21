@@ -5,6 +5,7 @@ import SocialProof from "@/components/sections/SocialProof";
 import Fleet from "@/components/sections/Fleet";
 import Services from "@/components/sections/Services";
 import VehicleFinder from "@/components/sections/VehicleFinder";
+import FAQ from "@/components/sections/FAQ";
 import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
@@ -19,6 +20,7 @@ export default function App() {
         <Fleet />
         <Services />
         <VehicleFinder />
+        <FAQ />
         <About />
         <Contact />
         <FloatingWhatsApp />
