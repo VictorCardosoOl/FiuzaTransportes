@@ -1,4 +1,5 @@
 import SmoothScrollWrapper from "@/components/layout/SmoothScrollWrapper";
+import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/sections/Hero";
 import SocialProof from "@/components/sections/SocialProof";
 import Fleet from "@/components/sections/Fleet";
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <SmoothScrollWrapper>
       <main className="bg-fiuza-cream min-h-screen font-sans">
+        <Navbar />
         <Hero />
         <SocialProof />
         <Fleet />
