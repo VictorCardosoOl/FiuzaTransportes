@@ -98,23 +98,25 @@ export default function Hero() {
           <div className="space-y-2 overflow-hidden">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-white">
               <div className="overflow-hidden">
-                <span className="hero-text-line block">Transporte de</span>
-              </div>
-              <div className="overflow-hidden">
                 <span className="hero-text-line block text-fiuza-blue">
-                  Cargas Pesadas
+                  Fiuza Transportes:
                 </span>
               </div>
               <div className="overflow-hidden">
-                <span className="hero-text-line block">com Segurança.</span>
+                <span className="hero-text-line block">
+                  Transporte de Cargas
+                </span>
+              </div>
+              <div className="overflow-hidden">
+                <span className="hero-text-line block">para todo o Brasil.</span>
               </div>
             </h1>
           </div>
 
           {/* Subheadline */}
           <p className="hero-fade-in max-w-xl text-lg md:text-xl text-gray-300 leading-relaxed">
-            Soluções completas em logística com frota diversificada. 
-            Qualquer tipo de carga, para qualquer lugar do país.
+            Soluções completas em logística com frota diversificada e segurança garantida. 
+            Qualquer tipo de carga, em qualquer lugar.
           </p>
 
           {/* CTA Buttons */}

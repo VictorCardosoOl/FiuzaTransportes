@@ -36,6 +36,20 @@ const vehicles = [
     icon: Zap,
     image: "https://images.unsplash.com/photo-1506306488026-b67509124810?q=80&w=1000&auto=format&fit=crop",
   },
+  {
+    name: "Saveiro / Utilitários",
+    description: "Foco em entregas expressas, documentos ou pequenos volumes urbanos com máxima agilidade.",
+    capacity: "Até 700 kg",
+    icon: Zap,
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000&auto=format&fit=crop",
+  },
+  {
+    name: "Outros / Especiais",
+    description: "Veículos complementares e adaptados para atender demandas específicas e projetos dedicados.",
+    capacity: "Sob consulta",
+    icon: Container,
+    image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1000&auto=format&fit=crop",
+  },
 ];
 
 export default function Fleet() {
