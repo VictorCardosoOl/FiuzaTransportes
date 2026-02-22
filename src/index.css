@@ -12,11 +12,26 @@
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
 }
 
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
 @layer base {
   body {
-    @apply bg-fiuza-cream text-fiuza-dark font-sans antialiased selection:bg-fiuza-blue selection:text-white;
+    @apply bg-fiuza-cream text-fiuza-dark font-sans antialiased selection:bg-fiuza-blue selection:text-white text-base leading-relaxed;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+    @apply font-display tracking-tight text-balance;
+  }
+  p {
+    @apply text-pretty;
   }
 }
