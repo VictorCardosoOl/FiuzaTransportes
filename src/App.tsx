@@ -9,11 +9,13 @@ import FAQ from "@/components/sections/FAQ";
 import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 
 export default function App() {
   return (
     <SmoothScrollWrapper>
       <main className="bg-fiuza-cream min-h-screen font-sans">
+        <ScrollProgress />
         <Navbar />
         <Hero />
         <SocialProof />

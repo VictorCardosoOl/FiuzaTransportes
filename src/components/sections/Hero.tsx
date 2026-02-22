@@ -37,9 +37,22 @@ export default function Hero() {
         ease: "expo.out",
       }, "-=1");
 
-      // Scroll Parallax
+      // Scroll Parallax & Blur
       gsap.to(".hero-image", {
         yPercent: 15,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".hero-title-container", {
+        yPercent: 50,
+        opacity: 0,
+        filter: "blur(10px)",
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
@@ -81,7 +94,7 @@ export default function Hero() {
         </div>
 
         {/* Main Typography */}
-        <div className="relative z-20 mb-12">
+        <div className="relative z-20 mb-12 hero-title-container">
           <h1 className="font-display font-bold text-[13vw] leading-[0.8] tracking-tighter uppercase mix-blend-darken">
             <div className="overflow-hidden"><span className="hero-line block">Fiuza</span></div>
             <div className="overflow-hidden"><span className="hero-line block text-fiuza-blue">Transportes</span></div>
