@@ -151,8 +151,10 @@ export default function Hero() {
               src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2940&auto=format&fit=crop&sat=-100"
               alt="Editorial Logistics"
               style={{ width: "100%", height: "120%", objectFit: "cover", objectPosition: "center" }}
-              className="grayscale contrast-125"
+              className="grayscale contrast-150"
             />
+            {/* Overlay escuro → aumenta contraste para as bordas brancas se destacarem */}
+            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} />
           </div>
 
           {/* ── LAYER 3: Texto TRANSPARENTE com borda branca, clipped à área da imagem (z-30) ──
@@ -169,8 +171,9 @@ export default function Hero() {
               inset: 0,
               zIndex: 30,
               color: "transparent",
-              WebkitTextStroke: "2px white",
+              WebkitTextStroke: "3px white",
               clipPath: `inset(0 ${IMAGE_RIGHT_CLIP} 0 ${IMAGE_LEFT})`,
+              filter: "drop-shadow(0 0 6px rgba(255,255,255,0.5))",
             }}
           >
             <div className="overflow-hidden flex">
