@@ -39,47 +39,51 @@ export default function Services() {
 
   useGSAP(
     () => {
-      gsap.from(".service-row", {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 70%",
-        },
-      });
+      gsap.fromTo(".service-row", 
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%", // Trigger earlier
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
     },
     { scope: containerRef }
   );
 
   return (
-    <section ref={containerRef} className="py-32 bg-fiuza-dark text-white relative overflow-hidden">
+    <section ref={containerRef} className="py-32 bg-white text-fiuza-dark relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left: Sticky Title */}
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-32">
-              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-6 block opacity-80">
+              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-6 block">
                 Nossos Serviços
               </span>
-              <h2 className="font-display text-5xl md:text-6xl font-light leading-tight mb-8 tracking-tight">
+              <h2 className="font-display text-5xl md:text-6xl font-light leading-tight mb-8 tracking-tight text-fiuza-dark">
                 Soluções <br />
-                <span className="text-white/40 italic font-serif">Logísticas</span>
+                <span className="text-fiuza-blue italic font-serif">Logísticas</span>
               </h2>
-              <p className="text-white/60 max-w-sm mb-8 font-light leading-relaxed">
+              <p className="text-fiuza-dark/80 max-w-sm mb-8 font-normal leading-relaxed">
                 Operações dedicadas e customizadas para garantir que sua carga chegue ao destino com integridade.
               </p>
               
               {/* Dynamic Image Preview (Desktop) */}
-              <div className="hidden lg:block aspect-[4/3] w-full rounded-sm overflow-hidden relative mt-12 opacity-80">
+              <div className="hidden lg:block aspect-[4/3] w-full rounded-sm overflow-hidden relative mt-12 opacity-100 shadow-xl shadow-fiuza-dark/5">
                 <img 
                   src={activeImage} 
                   alt="Service Preview" 
                   className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 grayscale hover:grayscale-0"
                 />
-                <div className="absolute inset-0 bg-fiuza-blue/20 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-fiuza-blue/10 mix-blend-multiply" />
               </div>
             </div>
           </div>
@@ -90,30 +94,30 @@ export default function Services() {
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className="service-row group relative border-t border-white/5 py-16 transition-all duration-500 hover:bg-white/[0.02] cursor-pointer"
+                  className="service-row group relative border-t border-fiuza-dark/10 py-16 transition-all duration-500 hover:bg-fiuza-dark/[0.02] cursor-pointer"
                   onMouseEnter={() => setActiveImage(service.image)}
                 >
                   <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-12 px-4">
-                    <span className="text-xs font-mono text-fiuza-blue opacity-50 tracking-widest">
+                    <span className="text-xs font-mono text-fiuza-blue font-bold tracking-widest">
                       /{service.id}
                     </span>
                     <div className="flex-1">
-                      <h3 className="text-3xl md:text-4xl font-display font-light mb-4 group-hover:text-fiuza-blue transition-colors duration-300">
+                      <h3 className="text-3xl md:text-4xl font-display font-medium mb-4 text-fiuza-dark group-hover:text-fiuza-blue transition-colors duration-300">
                         {service.title}
                       </h3>
-                      <p className="text-white/40 max-w-xl group-hover:text-white/70 transition-colors duration-300 font-light leading-relaxed">
+                      <p className="text-fiuza-dark/70 max-w-xl group-hover:text-fiuza-dark transition-colors duration-300 font-normal leading-relaxed">
                         {service.description}
                       </p>
                     </div>
                     <div className="md:self-center opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0 duration-500 ease-out">
-                      <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group-hover:border-fiuza-blue/50 group-hover:text-fiuza-blue">
+                      <div className="w-12 h-12 rounded-full border border-fiuza-dark/10 flex items-center justify-center group-hover:border-fiuza-blue/50 group-hover:text-fiuza-blue">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-              <div className="border-t border-white/5" />
+              <div className="border-t border-fiuza-dark/10" />
             </div>
           </div>
         </div>
