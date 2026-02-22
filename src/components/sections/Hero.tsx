@@ -21,24 +21,24 @@ export default function Hero() {
         stagger: 0.02,
         ease: "power4.out",
       })
-      .from(".hero-meta-reveal", {
-        opacity: 0,
-        y: 20,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power3.out",
-      }, "-=1")
-      .from(".hero-image-mask", {
-        scaleY: 0,
-        transformOrigin: "bottom",
-        duration: 1.5,
-        ease: "expo.inOut",
-      }, "-=1.2")
-      .from(imageRef.current, {
-        scale: 1.5,
-        duration: 2,
-        ease: "power2.out",
-      }, "-=1.5");
+        .from(".hero-meta-reveal", {
+          opacity: 0,
+          y: 20,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+        }, "-=1")
+        .from(".hero-image-mask", {
+          scaleY: 0,
+          transformOrigin: "bottom",
+          duration: 1.5,
+          ease: "expo.inOut",
+        }, "-=1.2")
+        .from(imageRef.current, {
+          scale: 1.5,
+          duration: 2,
+          ease: "power2.out",
+        }, "-=1.5");
 
       // Parallax
       gsap.to(imageRef.current, {
@@ -54,6 +54,14 @@ export default function Hero() {
     },
     { scope: containerRef }
   );
+
+  // Posição e tamanho da imagem — usados tanto no div da imagem quanto no clip-path da Layer 3
+  // A imagem começa em 50% da largura do container + deslocamento de 4%, largura de 30vw
+  // clip-path: inset(top right bottom left) — em % do elemento pai
+  // left  = 54% → borda esquerda da imagem
+  // right = 100% - 54% - 30% = 16% → borda direita da imagem (30vw ≈ 30% em container full-width)
+  const IMAGE_LEFT = "54%";
+  const IMAGE_RIGHT_CLIP = "16%"; // 100 - 54 - 30 = 16
 
   return (
     <section
@@ -91,11 +99,25 @@ export default function Hero() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-20 flex-1 flex flex-col justify-center max-w-[1800px] mx-auto w-full mt-12 md:mt-0">
-        
-        {/* Massive Typography */}
+      <div
+        className="relative flex-1 flex flex-col justify-center max-w-[1800px] mx-auto w-full mt-12 md:mt-0"
+        style={{ zIndex: 20 }}
+      >
+        {/*
+          ── TÉCNICA: 3 camadas com clip-path ──
+          Layer 1 (z-10): Texto sólido escuro — fica atrás da imagem, visível fora dela
+          Layer 2 (z-20): Imagem 9:16, posicionada à direita do centro
+          Layer 3 (z-30): Texto transparente + borda branca, recortado (clip-path)
+                          exatamente para cobrir só a área da imagem.
+                          Resultado: apenas as letras sobre a imagem ficam ocas com contorno branco.
+        */}
         <div className="relative">
-          <h1 className="font-display text-[16vw] leading-[0.8] font-medium tracking-tighter uppercase mix-blend-difference text-[#111] z-30 relative pointer-events-none">
+
+          {/* ── LAYER 1: Texto SÓLIDO (atrás, z-10) ── */}
+          <h1
+            className="font-display text-[16vw] leading-[0.8] font-medium tracking-tighter uppercase text-[#111] pointer-events-none select-none"
+            style={{ position: "relative", zIndex: 10 }}
+          >
             <div className="overflow-hidden flex">
               {"LOGISTICS".split("").map((char, i) => (
                 <span key={i} className="hero-char block">{char}</span>
@@ -111,28 +133,74 @@ export default function Hero() {
             </div>
           </h1>
 
-          {/* Floating Image */}
-          <div className="absolute top-1/2 right-0 md:right-[10%] w-[60vw] md:w-[30vw] aspect-[3/4] -translate-y-1/2 z-10 hero-image-mask overflow-hidden">
+          {/* ── LAYER 2: Imagem 9:16 (z-20) — ligeiramente à direta do centro ── */}
+          <div
+            className="hero-image-mask overflow-hidden"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: IMAGE_LEFT,
+              transform: "translateY(-50%)",
+              width: "30vw",
+              aspectRatio: "9 / 16",
+              zIndex: 20,
+            }}
+          >
             <img
               ref={imageRef}
               src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2940&auto=format&fit=crop&sat=-100"
               alt="Editorial Logistics"
-              className="w-full h-[120%] object-cover grayscale contrast-125"
+              style={{ width: "100%", height: "120%", objectFit: "cover", objectPosition: "center" }}
+              className="grayscale contrast-125"
             />
           </div>
-        </div>
 
+          {/* ── LAYER 3: Texto TRANSPARENTE com borda branca, clipped à área da imagem (z-30) ──
+              clip-path: inset(top right bottom left)
+              → recorta o h1 para que só a faixa de 54% a 84% da largura seja visível,
+                coincidindo exatamente com a posição da imagem.
+              → Resultado: somente as letras que ficam SOBRE a imagem aparecem ocas + contorno branco.
+          */}
+          <h1
+            aria-hidden="true"
+            className="font-display text-[16vw] leading-[0.8] font-medium tracking-tighter uppercase pointer-events-none select-none"
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 30,
+              color: "transparent",
+              WebkitTextStroke: "2px white",
+              clipPath: `inset(0 ${IMAGE_RIGHT_CLIP} 0 ${IMAGE_LEFT})`,
+            }}
+          >
+            <div className="overflow-hidden flex">
+              {"LOGISTICS".split("").map((char, i) => (
+                <span key={i} className="hero-char block">{char}</span>
+              ))}
+            </div>
+            <div className="overflow-hidden flex items-center gap-4 md:gap-12">
+              <span className="hero-char block italic font-serif tracking-normal text-[0.4em] normal-case transform -translate-y-4 md:-translate-y-8"
+                style={{ WebkitTextStroke: "1px white" }}>
+                Solutions
+              </span>
+              {"REDEFINED".split("").map((char, i) => (
+                <span key={i} className="hero-char block">{char}</span>
+              ))}
+            </div>
+          </h1>
+
+        </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="relative z-10 flex justify-between items-end max-w-[1800px] mx-auto w-full hero-meta-reveal pb-8">
         <div className="max-w-xs">
           <p className="text-xs md:text-sm leading-relaxed opacity-70 font-medium">
-            Conectando pontos estratégicos com inteligência e precisão. 
+            Conectando pontos estratégicos com inteligência e precisão.
             Sua carga, nosso compromisso absoluto.
           </p>
         </div>
-        
+
         <button className="group flex items-center gap-4">
           <span className="text-xs font-mono uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">Scroll to Explore</span>
           <div className="w-10 h-10 rounded-full border border-[#111]/20 flex items-center justify-center group-hover:bg-[#111] group-hover:text-white transition-all">
