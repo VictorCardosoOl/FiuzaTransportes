@@ -2,137 +2,115 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Truck, Box, Container, Zap } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const vehicles = [
+const fleet = [
   {
-    name: "Carreta",
-    description: "Foco em grandes volumes e longas distâncias. Ideal para cargas pesadas e lotação completa.",
+    name: "Carreta LS",
+    description: "Foco em grandes volumes e longas distâncias. Ideal para cargas paletizadas e pesadas.",
     capacity: "Até 27 toneladas",
-    icon: Container,
-    image: "https://images.unsplash.com/photo-1586191582118-274277497833?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    name: "Truck",
-    description: "Ideal para volumes médios a grandes com agilidade interestadual.",
-    capacity: "Até 14 toneladas",
-    icon: Truck,
     image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=1000&auto=format&fit=crop",
   },
   {
-    name: "Toco",
+    name: "Truck / Semipesado",
+    description: "Ideal para volumes médios a grandes com agilidade interestadual.",
+    capacity: "Até 14 toneladas",
+    image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1000&auto=format&fit=crop",
+  },
+  {
+    name: "Toco / Médio",
     description: "Equilíbrio entre capacidade e versatilidade para centros urbanos e rodovias.",
     capacity: "Até 6 toneladas",
-    icon: Box,
-    image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?q=80&w=1000&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1616432043562-3671ea2e5242?q=80&w=1000&auto=format&fit=crop",
   },
   {
     name: "VUC / Bongo",
     description: "Perfeito para entregas rápidas, áreas com restrição de circulação e volumes moderados.",
     capacity: "Até 1.5 toneladas",
-    icon: Zap,
     image: "https://images.unsplash.com/photo-1506306488026-b67509124810?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    name: "Saveiro / Utilitários",
-    description: "Foco em entregas expressas, documentos ou pequenos volumes urbanos com máxima agilidade.",
-    capacity: "Até 700 kg",
-    icon: Zap,
-    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1000&auto=format&fit=crop",
-  },
-  {
-    name: "Outros / Especiais",
-    description: "Veículos complementares e adaptados para atender demandas específicas e projetos dedicados.",
-    capacity: "Sob consulta",
-    icon: Container,
-    image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?q=80&w=1000&auto=format&fit=crop",
   },
 ];
 
 export default function Fleet() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const cards = gsap.utils.toArray(".fleet-card");
-      
-      gsap.fromTo(
-        cards,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      const slider = sliderRef.current;
+      if (!slider) return;
+
+      const totalWidth = slider.scrollWidth - window.innerWidth + 100; // Extra buffer
+
+      gsap.to(slider, {
+        x: -totalWidth,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: `+=${totalWidth}`,
+          pin: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
     },
-    { scope: containerRef }
+    { scope: sectionRef }
   );
 
   return (
-    <section ref={containerRef} className="py-24 bg-white text-fiuza-dark">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="mb-16 max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-fiuza-blue">
-            Nossa Frota
-          </h2>
-          <p className="text-lg text-gray-600">
-            Tecnologia e diversidade para atender qualquer demanda logística. 
-            Do urbano ao rodoviário, temos o veículo certo para sua carga.
-          </p>
-        </div>
+    <section ref={sectionRef} className="relative h-screen bg-[#111] text-[#F2F2F2] overflow-hidden">
+      <div className="absolute top-12 left-8 md:left-16 z-10">
+        <h2 className="font-display text-4xl md:text-5xl font-medium tracking-tight">
+          Nossa Frota
+        </h2>
+        <p className="text-sm text-gray-400 mt-2 max-w-xs">
+          Veículos modernos e rastreados para qualquer necessidade.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {vehicles.map((vehicle, index) => (
-            <div
-              key={index}
-              className="fleet-card group relative overflow-hidden rounded-2xl bg-gray-50 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300"
+      <div className="h-full flex items-center">
+        <div ref={sliderRef} className="flex gap-8 pl-8 md:pl-16 pr-16 w-max">
+          {fleet.map((item, i) => (
+            <div 
+              key={i} 
+              className="relative w-[85vw] md:w-[40vw] h-[60vh] md:h-[70vh] flex-shrink-0 group overflow-hidden bg-[#222]"
             >
-              <div className="aspect-[4/3] w-full overflow-hidden">
-                <img
-                  src={vehicle.image}
-                  alt={vehicle.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-              </div>
+              <img
+                src={item.image}
+                alt={item.name}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
               
-              <div className="p-6">
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-lg bg-fiuza-light p-2 text-fiuza-blue">
-                    <vehicle.icon className="h-6 w-6" />
+              <div className="absolute bottom-0 left-0 w-full p-8 md:p-12">
+                <div className="border-t border-white/20 pt-6 flex flex-col gap-4">
+                  <div className="flex justify-between items-end">
+                    <h3 className="font-display text-3xl md:text-4xl font-medium">{item.name}</h3>
+                    <span className="text-xs font-mono border border-white/30 px-2 py-1 rounded-full">
+                      {item.capacity}
+                    </span>
                   </div>
-                  <h3 className="text-xl font-bold">{vehicle.name}</h3>
-                </div>
-                
-                <p className="mb-4 text-sm text-gray-600 leading-relaxed">
-                  {vehicle.description}
-                </p>
-                
-                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                  <span className="text-xs font-semibold text-fiuza-blue bg-fiuza-light px-2 py-1 rounded">
-                    {vehicle.capacity}
-                  </span>
+                  <p className="text-gray-400 text-sm md:text-base max-w-md">
+                    {item.description}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Button variant="outline" size="lg" onClick={() => window.open("https://wa.me/5511999999999", "_blank")}>
-            Consultar Disponibilidade
-          </Button>
+          
+          {/* CTA Card at the end */}
+          <div className="w-[85vw] md:w-[30vw] h-[60vh] md:h-[70vh] flex-shrink-0 flex items-center justify-center bg-fiuza-blue text-white">
+            <div className="text-center p-8">
+              <h3 className="font-display text-4xl mb-6">Frota Personalizada?</h3>
+              <p className="mb-8 opacity-80">Temos soluções sob medida para sua operação.</p>
+              <button className="bg-white text-fiuza-blue px-8 py-4 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-black hover:text-white transition-colors">
+                Falar com Consultor
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
