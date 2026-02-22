@@ -1,10 +1,8 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Star, Quote } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
@@ -39,15 +37,15 @@ export default function SocialProof() {
       if (marquee) {
         const content = marquee.querySelector(".marquee-content");
         if (content) {
-            const clone = content.cloneNode(true);
-            marquee.appendChild(clone);
-            
-            gsap.to(marquee.children, {
-                xPercent: -100,
-                repeat: -1,
-                duration: 20,
-                ease: "linear",
-            });
+          const clone = content.cloneNode(true);
+          marquee.appendChild(clone);
+
+          gsap.to(marquee.children, {
+            xPercent: -100,
+            repeat: -1,
+            duration: 20,
+            ease: "linear",
+          });
         }
       }
 
@@ -68,30 +66,30 @@ export default function SocialProof() {
   );
 
   return (
-    <section ref={containerRef} className="py-24 bg-white border-b border-fiuza-dark/5 overflow-hidden">
+    <section id="social-proof" ref={containerRef} className="py-24 bg-white border-b border-fiuza-dark/5 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 mb-20">
         <div className="text-center mb-12">
-            <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-4 block">
-                Confiança
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl text-fiuza-dark">
-                Parceiros que <span className="font-serif italic text-fiuza-blue">movem o mundo</span>
-            </h2>
+          <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-4 block">
+            Confiança
+          </span>
+          <h2 className="font-display text-4xl md:text-5xl text-fiuza-dark">
+            Parceiros que <span className="font-serif italic text-fiuza-blue">movem o mundo</span>
+          </h2>
         </div>
 
         {/* Marquee */}
         <div className="relative w-full overflow-hidden py-8 border-y border-fiuza-dark/5">
-            <div ref={marqueeRef} className="flex gap-16 w-max items-center">
-                <div className="marquee-content flex gap-16 items-center">
-                    {partners.map((partner, i) => (
-                        <span key={i} className="text-4xl md:text-6xl font-display font-bold text-fiuza-dark/10 uppercase tracking-tighter hover:text-fiuza-blue/20 transition-colors cursor-default">
-                            {partner}
-                        </span>
-                    ))}
-                </div>
+          <div ref={marqueeRef} className="flex gap-16 w-max items-center">
+            <div className="marquee-content flex gap-16 items-center">
+              {partners.map((partner, i) => (
+                <span key={i} className="text-4xl md:text-6xl font-display font-bold text-fiuza-dark/10 uppercase tracking-tighter hover:text-fiuza-blue/20 transition-colors cursor-default">
+                  {partner}
+                </span>
+              ))}
             </div>
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+          </div>
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
         </div>
       </div>
 

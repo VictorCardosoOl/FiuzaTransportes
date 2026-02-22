@@ -1,10 +1,8 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
 
 const fleet = [
   {
@@ -61,7 +59,7 @@ export default function Fleet() {
   );
 
   return (
-    <section ref={sectionRef} className="relative h-screen bg-[#111] text-[#F2F2F2] overflow-hidden">
+    <section ref={sectionRef} id="frota" className="relative h-screen bg-fiuza-dark text-fiuza-cream overflow-hidden">
       <div className="absolute top-12 left-8 md:left-16 z-10">
         <h2 className="font-display text-4xl md:text-5xl font-medium tracking-tight">
           Nossa Frota
@@ -73,9 +71,9 @@ export default function Fleet() {
 
       <div className="h-full flex items-center">
         <div ref={sliderRef} className="flex gap-8 pl-8 md:pl-16 pr-16 w-max">
-          {fleet.map((item, i) => (
-            <div 
-              key={i} 
+          {fleet.map((item) => (
+            <div
+              key={item.name}
               className="relative w-[85vw] md:w-[40vw] h-[60vh] md:h-[70vh] flex-shrink-0 group overflow-hidden bg-[#222]"
             >
               <img
@@ -84,7 +82,7 @@ export default function Fleet() {
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
-              
+
               <div className="absolute bottom-0 left-0 w-full p-8 md:p-12">
                 <div className="border-t border-white/20 pt-6 flex flex-col gap-4">
                   <div className="flex justify-between items-end">
@@ -100,7 +98,7 @@ export default function Fleet() {
               </div>
             </div>
           ))}
-          
+
           {/* CTA Card at the end */}
           <div className="w-[85vw] md:w-[30vw] h-[60vh] md:h-[70vh] flex-shrink-0 flex items-center justify-center bg-fiuza-blue text-white">
             <div className="text-center p-8">

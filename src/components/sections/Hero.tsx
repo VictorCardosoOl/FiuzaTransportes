@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDownRight } from "lucide-react";
 import { useHeroAnimation } from "@/hooks/useHeroAnimation";

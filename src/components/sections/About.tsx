@@ -1,9 +1,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,10 +23,10 @@ export default function About() {
   );
 
   return (
-    <section ref={containerRef} className="py-24 bg-white text-fiuza-dark">
+    <section id="sobre" ref={containerRef} className="py-24 bg-white text-fiuza-dark">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row gap-16 items-center">
-          
+
           {/* Image Side */}
           <div className="w-full lg:w-1/2 relative">
             <div className="aspect-[3/4] md:aspect-square w-full rounded-2xl overflow-hidden shadow-2xl">
@@ -51,7 +49,7 @@ export default function About() {
               Tradição em <br />
               <span className="text-fiuza-blue">Conectar o Brasil</span>
             </h2>
-            
+
             <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
               <p className="about-text">
                 A Fiuza Transportes nasceu da paixão pela logística e do compromisso com a palavra dada. O que começou com um único caminhão, hoje é uma operação robusta que conecta produtores e consumidores em todo o território nacional.
