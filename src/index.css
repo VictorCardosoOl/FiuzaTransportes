@@ -2,10 +2,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-fiuza-blue: #0052CC;
-  --color-fiuza-dark: #0A2540;
-  --color-fiuza-cream: #F5F0E6;
-  --color-fiuza-light: #E6F0FF;
+  --color-fiuza-blue: #0047FF; /* Vibrant International Blue */
+  --color-fiuza-dark: #020617; /* Deepest Navy/Black */
+  --color-fiuza-cream: #F8FAFC; /* Cool White / Slate 50 (Replacing the yellow cream) */
+  --color-fiuza-light: #EFF6FF; /* Blue 50 */
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
