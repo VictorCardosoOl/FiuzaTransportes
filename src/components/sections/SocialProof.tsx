@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Star } from "lucide-react";
+import { Star, Quote } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,26 +25,42 @@ const testimonials = [
 ];
 
 const partners = [
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/2560px-Google_2015_logo.svg.png",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Slack_Technologies_Logo.svg/2560px-Slack_Technologies_Logo.svg.png",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/2560px-Netflix_2015_logo.svg.png",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+  "Amazon", "Google", "Slack", "Netflix", "Apple", "Microsoft", "Tesla", "SpaceX"
 ];
 
 export default function SocialProof() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
+      // Marquee Animation
+      const marquee = marqueeRef.current;
+      if (marquee) {
+        const content = marquee.querySelector(".marquee-content");
+        if (content) {
+            const clone = content.cloneNode(true);
+            marquee.appendChild(clone);
+            
+            gsap.to(marquee.children, {
+                xPercent: -100,
+                repeat: -1,
+                duration: 20,
+                ease: "linear",
+            });
+        }
+      }
+
+      // Testimonial Reveal
       gsap.from(".testimonial-card", {
-        y: 40,
+        y: 60,
         opacity: 0,
-        duration: 0.8,
+        duration: 1,
         stagger: 0.2,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 80%",
+          start: "top 70%",
         },
       });
     },
@@ -52,34 +68,42 @@ export default function SocialProof() {
   );
 
   return (
-    <section ref={containerRef} className="py-20 bg-white border-b border-gray-100">
-      <div className="container mx-auto px-4 md:px-6">
-        
-        {/* Partners Marquee (Static for now, could be animated) */}
-        <div className="mb-16 text-center">
-          <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-8">
-            Empresas que confiam na Fiuza Transportes
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-            {partners.map((logo, i) => (
-              <img key={i} src={logo} alt="Partner Logo" className="h-8 md:h-10 object-contain" />
-            ))}
-          </div>
+    <section ref={containerRef} className="py-24 bg-white border-b border-fiuza-dark/5 overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6 mb-20">
+        <div className="text-center mb-12">
+            <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-4 block">
+                Confiança
+            </span>
+            <h2 className="font-display text-4xl md:text-5xl text-fiuza-dark">
+                Parceiros que <span className="font-serif italic text-fiuza-blue">movem o mundo</span>
+            </h2>
         </div>
 
-        {/* Testimonials */}
+        {/* Marquee */}
+        <div className="relative w-full overflow-hidden py-8 border-y border-fiuza-dark/5">
+            <div ref={marqueeRef} className="flex gap-16 w-max items-center">
+                <div className="marquee-content flex gap-16 items-center">
+                    {partners.map((partner, i) => (
+                        <span key={i} className="text-4xl md:text-6xl font-display font-bold text-fiuza-dark/10 uppercase tracking-tighter hover:text-fiuza-blue/20 transition-colors cursor-default">
+                            {partner}
+                        </span>
+                    ))}
+                </div>
+            </div>
+            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
+            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((item, i) => (
-            <div key={i} className="testimonial-card bg-gray-50 p-8 rounded-2xl border border-gray-100">
-              <div className="flex gap-1 text-yellow-400 mb-4">
-                {[...Array(5)].map((_, j) => (
-                  <Star key={j} className="w-4 h-4 fill-current" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6 italic">"{item.text}"</p>
-              <div>
-                <h4 className="font-bold text-fiuza-dark">{item.name}</h4>
-                <p className="text-xs text-gray-500">{item.role}</p>
+            <div key={i} className="testimonial-card group bg-[#F8FAFC] p-10 rounded-sm hover:bg-fiuza-dark hover:text-white transition-all duration-500 cursor-default">
+              <Quote className="w-8 h-8 text-fiuza-blue mb-6 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <p className="text-lg font-serif italic mb-8 leading-relaxed opacity-80">"{item.text}"</p>
+              <div className="border-t border-current/10 pt-6 mt-auto">
+                <h4 className="font-display font-bold tracking-wide uppercase text-sm mb-1">{item.name}</h4>
+                <p className="text-xs opacity-50 font-mono uppercase tracking-wider">{item.role}</p>
               </div>
             </div>
           ))}

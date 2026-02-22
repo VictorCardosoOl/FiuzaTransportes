@@ -11,11 +11,13 @@ import Contact from "@/components/sections/Contact";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import NoiseOverlay from "@/components/ui/NoiseOverlay";
+import Preloader from "@/components/ui/Preloader";
 
 export default function App() {
   return (
     <SmoothScrollWrapper>
       <main className="bg-fiuza-cream min-h-screen font-sans">
+        <Preloader />
         <NoiseOverlay />
         <ScrollProgress />
         <Navbar />
