@@ -1,42 +1,57 @@
-import { useRef, RefObject } from "react";
+import { RefObject } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 interface UseHeroAnimationOptions {
     containerRef: RefObject<HTMLDivElement | null>;
-    imageRef: RefObject<HTMLImageElement | null>;
+    imageRef: RefObject<HTMLDivElement | null>;
 }
 
-/**
- * Encapsula toda a lógica de animação do Hero.
- * Mantém o componente Hero focado apenas na estrutura JSX.
- */
 export function useHeroAnimation({ containerRef, imageRef }: UseHeroAnimationOptions) {
     useGSAP(
         () => {
-            const tl = gsap.timeline();
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-            tl.from(".hero-char", {
-                yPercent: 100,
-                duration: 1.5,
-                stagger: 0.02,
-                ease: "power4.out",
+            // 1. Imagem sobe de baixo (reveal)
+            tl.from(".hero-image-wrap", {
+                scale: 1.08,
+                duration: 2.2,
+                ease: "power2.out",
             })
-                .from(
-                    ".hero-meta-reveal",
-                    { opacity: 0, y: 20, duration: 1, stagger: 0.1, ease: "power3.out" },
-                    "-=1"
-                )
-                .from(
-                    ".hero-image-mask",
-                    { scaleY: 0, transformOrigin: "bottom", duration: 1.5, ease: "expo.inOut" },
-                    "-=1.2"
-                )
-                .from(imageRef.current, { scale: 1.5, duration: 2, ease: "power2.out" }, "-=1.5");
 
+                // 2. Overlay escurece suavemente
+                .from(".hero-overlay", {
+                    opacity: 0,
+                    duration: 1.8,
+                    ease: "power2.out",
+                }, "<")
+
+                // 3. Eyebrow + headline entram linha a linha
+                .from(".hero-eyebrow", {
+                    yPercent: 120,
+                    opacity: 0,
+                    duration: 1.2,
+                }, "-=1.0")
+
+                .from(".hero-line", {
+                    yPercent: 100,
+                    opacity: 0,
+                    duration: 1.4,
+                    stagger: 0.12,
+                    ease: "expo.out",
+                }, "-=0.9")
+
+                // 4. Meta info e CTA entram por último
+                .from(".hero-bottom", {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.1,
+                }, "-=0.6");
+
+            // Parallax suave na imagem com scroll
             gsap.to(imageRef.current, {
-                yPercent: 20,
+                yPercent: 18,
                 ease: "none",
                 scrollTrigger: {
                     trigger: containerRef.current,

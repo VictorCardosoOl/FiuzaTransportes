@@ -1,200 +1,161 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { ArrowDownRight } from "lucide-react";
 import { useHeroAnimation } from "@/hooks/useHeroAnimation";
+import { whatsappUrl } from "@/config/contact";
 
-// ─── Constantes fora do componente (não recriadas a cada render) ───────────
-const HERO_IMAGE_SRC =
-  "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2940&auto=format&fit=crop&sat=-100";
+// ── Imagem fullscreen — caminhão em rodovia, perspectiva grandiosa
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1519003300449-424ad0405076?q=80&w=2940&auto=format&fit=crop";
 
-/** Posição e tamanho da imagem vertical (9:16) posicionada à direita do centro.
- *  Usado tanto no div da imagem quanto no clip-path da Layer 3.
- *  left = 54% → left = IMAGE_LEFT
- *  right clip = 100% - 54% - 30% = 16% → IMAGE_RIGHT_CLIP
- */
-const HERO_LAYOUT = {
-  imageLeft: "54%",
-  imageRightClip: "16%",
-} as const;
-
-// ─── Sub-componentes ───────────────────────────────────────────────────────
-
-/** Renderiza os caracteres animáveis de uma string como <span>s individuais. */
-function AnimatedChars({ text }: { text: string }) {
-  return (
-    <>
-      {text.split("").map((char, i) => (
-        <span key={i} className="hero-char block">
-          {char}
-        </span>
-      ))}
-    </>
-  );
-}
-
-interface HeroTitleProps {
-  /** Quando true, aplica aria-hidden e estilos de texto transparente com borda. */
-  isClipLayer?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-/**
- * Tipografia do Hero.
- * Compartilhada entre a Layer 1 (texto sólido) e a Layer 3 (texto transparente clipped),
- * eliminando a duplicação de JSX que existia anteriormente.
- */
-function HeroTitle({ isClipLayer = false, className = "", style }: HeroTitleProps) {
-  return (
-    <h1
-      aria-hidden={isClipLayer}
-      className={`font-display text-[16vw] leading-[0.8] font-medium tracking-tighter uppercase pointer-events-none select-none ${className}`}
-      style={style}
-    >
-      <div className="overflow-hidden flex">
-        <AnimatedChars text="LOGISTICS" />
-      </div>
-      <div className="overflow-hidden flex items-center gap-4 md:gap-12">
-        <span
-          className="hero-char block text-fiuza-blue italic font-serif tracking-normal text-[0.4em] normal-case transform -translate-y-4 md:-translate-y-8"
-          style={isClipLayer ? { color: "transparent", WebkitTextStroke: "1px white" } : undefined}
-        >
-          Solutions
-        </span>
-        <AnimatedChars text="REDEFINED" />
-      </div>
-    </h1>
-  );
-}
-
-// ─── Componente principal ──────────────────────────────────────────────────
+const WHATSAPP = whatsappUrl("Olá! Gostaria de solicitar um orçamento para transporte.");
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
-  // I1 fix: gsap.registerPlugin centralizado no SmoothScrollWrapper — não registrado aqui.
-  // D3 fix: lógica de animação extraída para hook customizado.
   useHeroAnimation({ containerRef, imageRef });
-
-  const { imageLeft, imageRightClip } = HERO_LAYOUT;
 
   return (
     <section
       id="inicio"
       ref={containerRef}
-      // I2 fix: tokens do design system no lugar de magic strings de cor.
-      className="relative min-h-screen w-full bg-fiuza-cream text-fiuza-dark pt-32 pb-12 px-4 md:px-8 flex flex-col justify-between overflow-hidden"
+      className="relative min-h-screen w-full overflow-hidden bg-fiuza-dark flex flex-col"
     >
-      {/* Grid Lines decorativo */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
-        <div className="w-full h-full border-x border-fiuza-dark/5 mx-auto max-w-[1800px] grid grid-cols-4 md:grid-cols-12">
-          <div className="col-span-1 md:col-span-3 border-r border-fiuza-dark/5 h-full" />
-          <div className="col-span-1 md:col-span-3 border-r border-fiuza-dark/5 h-full" />
-          <div className="col-span-1 md:col-span-3 border-r border-fiuza-dark/5 h-full" />
-        </div>
+      {/* ── Imagem fullscreen com parallax ── */}
+      <div ref={imageRef} className="hero-image-wrap absolute inset-0 w-full h-[115%]">
+        <img
+          src={HERO_IMAGE}
+          alt="Caminhão Fiuza Transportes em rodovia — logística de alto desempenho"
+          className="w-full h-full object-cover object-center"
+          style={{ willChange: "transform" }}
+          fetchPriority="high"
+          decoding="sync"
+        />
       </div>
 
-      {/* Top Bar */}
-      <div className="relative z-10 flex justify-between items-start max-w-[1800px] mx-auto w-full hero-meta-reveal">
-        <div className="flex flex-col">
-          <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Logistics Partner</span>
-          <span className="text-sm font-medium tracking-wide">
-            Fiuza Transportes ©{new Date().getFullYear()}
-          </span>
-        </div>
-        <div className="hidden md:flex gap-12">
-          <div className="flex flex-col text-right">
-            <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Location</span>
-            <span className="text-sm font-medium tracking-wide">São Paulo, BR</span>
-          </div>
-          <div className="flex flex-col text-right">
-            <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Status</span>
-            <div className="flex items-center gap-2 justify-end">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true" />
-              <span className="text-sm font-medium tracking-wide">Operational</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content — Técnica: 3 camadas com clip-path */}
+      {/* ── Overlay em gradiente — legibilidade do texto ── */}
       <div
-        className="relative flex-1 flex flex-col justify-center max-w-[1800px] mx-auto w-full mt-12 md:mt-0"
-        style={{ zIndex: 20 }}
-      >
-        <div className="relative">
+        className="hero-overlay absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(10,10,15,0.55) 0%, rgba(10,10,15,0.25) 40%, rgba(10,10,15,0.72) 100%)",
+        }}
+        aria-hidden="true"
+      />
 
-          {/* ── LAYER 1: Texto sólido escuro (z-10) — visível fora da imagem ── */}
-          <HeroTitle
-            className="text-fiuza-dark"
-            style={{ position: "relative", zIndex: 10 }}
-          />
+      {/* ── Ruído de textura para profundidade ── */}
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+        aria-hidden="true"
+      />
 
-          {/* ── LAYER 2: Imagem 9:16 (z-20) — posicionada à direita do centro ── */}
-          <div
-            className="hero-image-mask overflow-hidden"
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: imageLeft,
-              transform: "translateY(-50%)",
-              width: "30vw",
-              aspectRatio: "9 / 16",
-              zIndex: 20,
-            }}
-          >
-            <img
-              ref={imageRef}
-              src={HERO_IMAGE_SRC}
-              alt="Veículo de logística Fiuza Transportes em operação"
-              style={{ width: "100%", height: "120%", objectFit: "cover", objectPosition: "center" }}
-              className="grayscale contrast-150"
-            />
-            {/* Overlay escuro → aumenta contraste para as bordas brancas se destacarem */}
-            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)" }} aria-hidden="true" />
-          </div>
-
-          {/* ── LAYER 3: Texto transparente + borda branca, recortado (z-30) ──
-              clip-path inset recorta o h1 para cobrir exatamente a área da imagem.
-              Resultado: apenas as letras SOBRE a imagem ficam ocas com contorno branco.
-          */}
-          <HeroTitle
-            isClipLayer
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 30,
-              color: "transparent",
-              WebkitTextStroke: "3px white",
-              clipPath: `inset(0 ${imageRightClip} 0 ${imageLeft})`,
-              filter: "drop-shadow(0 0 6px rgba(255,255,255,0.5))",
-            }}
-          />
-
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="relative z-10 flex justify-between items-end max-w-[1800px] mx-auto w-full hero-meta-reveal pb-8">
-        <div className="max-w-xs">
-          <p className="text-xs md:text-sm leading-relaxed opacity-70 font-medium">
-            Conectando pontos estratégicos com inteligência e precisão.
-            Sua carga, nosso compromisso absoluto.
+      {/* ── Top bar ── */}
+      <div className="relative z-10 flex justify-between items-start px-6 md:px-10 pt-28 hero-bottom">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/50 mb-1">
+            Logística & Transporte
+          </p>
+          <p className="text-sm font-display font-medium tracking-wide text-white/80">
+            Fiuza Transportes — Est. 2009
           </p>
         </div>
-        <button
-          className="group flex items-center gap-4"
-          aria-label="Rolar para explorar o conteúdo"
-          onClick={() => document.getElementById("social-proof")?.scrollIntoView({ behavior: "smooth" })}
-        >
-          <span className="text-xs font-mono uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity">
-            Scroll to Explore
-          </span>
-          <div className="w-10 h-10 rounded-full border border-fiuza-dark/20 flex items-center justify-center group-hover:bg-fiuza-dark group-hover:text-white transition-all">
-            <ArrowDownRight className="w-4 h-4" />
+
+        <div className="hidden md:flex items-center gap-8">
+          <div className="text-right">
+            <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-white/40 mb-1">Sede</p>
+            <p className="text-sm text-white/70 font-light">São Paulo, BR</p>
           </div>
-        </button>
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/50">Operacional</span>
+          </div>
+        </div>
       </div>
+
+      {/* ── Headline principal — coração do Hero ── */}
+      <div className="relative z-10 flex-1 flex flex-col justify-end px-6 md:px-10 pb-36 md:pb-40">
+
+        {/* Eyebrow */}
+        <div className="overflow-hidden mb-6 md:mb-8">
+          <p className="hero-eyebrow text-[10px] font-mono uppercase tracking-[0.35em] text-fiuza-cream/60">
+            Conectando o Brasil desde 2009
+          </p>
+        </div>
+
+        {/* H1 — tipografia mista: Display + Serif italic */}
+        <h1 className="text-fiuza-cream">
+          {/* Linha 1 */}
+          <div className="overflow-hidden">
+            <span className="hero-line block font-display font-bold text-[13vw] md:text-[10vw] lg:text-[8.5vw] leading-[0.86] tracking-tight uppercase">
+              Transportamos
+            </span>
+          </div>
+
+          {/* Linha 2 — combina dois pesos */}
+          <div className="overflow-hidden flex flex-wrap items-baseline gap-x-4 md:gap-x-6">
+            <span className="hero-line block font-serif italic font-light text-[12vw] md:text-[9.5vw] lg:text-[8vw] leading-[0.9] text-fiuza-cream/90">
+              com
+            </span>
+            <span className="hero-line block font-display font-bold text-[13vw] md:text-[10vw] lg:text-[8.5vw] leading-[0.86] tracking-tight uppercase">
+              Confiança
+            </span>
+          </div>
+
+          {/* Linha 3 — destaque em azul */}
+          <div className="overflow-hidden mt-1 md:mt-2">
+            <span
+              className="hero-line block font-serif italic font-light text-[10vw] md:text-[7.5vw] lg:text-[6.5vw] leading-[1]"
+              style={{ color: "hsl(220 90% 72%)" }}
+            >
+              — do produtor ao consumidor.
+            </span>
+          </div>
+        </h1>
+      </div>
+
+      {/* ── Bottom bar ── */}
+      <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6 px-6 md:px-10 pb-10 border-t border-white/8 pt-6">
+
+        {/* Descrição */}
+        <p className="hero-bottom max-w-sm text-sm text-white/60 font-light leading-relaxed">
+          +800 empresas confiam na Fiuza para suas operações logísticas em todo o território nacional.
+        </p>
+
+        {/* CTAs */}
+        <div className="hero-bottom flex items-center gap-4 md:gap-6">
+          {/* CTA Primário */}
+          <a
+            href={WHATSAPP}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 bg-white text-fiuza-dark text-[11px] font-mono uppercase tracking-[0.2em] px-7 py-4 rounded-full hover:bg-fiuza-cream transition-colors duration-300"
+          >
+            Solicitar Cotação
+            <ArrowDownRight className="w-4 h-4 rotate-[-45deg] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </a>
+
+          {/* Scroll hint */}
+          <button
+            className="group flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity"
+            aria-label="Rolar para explorar"
+            onClick={() => document.getElementById("social-proof")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            <span className="text-[10px] font-mono uppercase tracking-widest text-white hidden md:block">
+              Explorar
+            </span>
+            <div className="w-10 h-10 rounded-full border border-white/25 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+              <ArrowDownRight className="w-4 h-4 text-white" />
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Linha decorativa inferior ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" aria-hidden="true" />
     </section>
   );
 }
