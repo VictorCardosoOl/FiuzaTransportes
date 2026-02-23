@@ -1,10 +1,14 @@
 import { lazy, Suspense } from "react";
 import SmoothScrollWrapper from "@/components/layout/SmoothScrollWrapper";
 import Navbar from "@/components/layout/Navbar";
+import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
+import ScrollProgress from "@/components/ui/ScrollProgress";
+import NoiseOverlay from "@/components/ui/NoiseOverlay";
+import Preloader from "@/components/ui/Preloader";
+import LgpdBanner from "@/components/ui/LgpdBanner";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
-// D4 fix: React.lazy + Suspense para code splitting.
-// O bundle inicial carrega apenas o Hero (acima da dobra); as demais sections
-// são baixadas de forma assíncrona, reduzindo o tempo de interatividade (TTI).
+// Code splitting — cada section é um chunk independente no bundle
 const Hero = lazy(() => import("@/components/sections/Hero"));
 const SocialProof = lazy(() => import("@/components/sections/SocialProof"));
 const Fleet = lazy(() => import("@/components/sections/Fleet"));
@@ -14,15 +18,8 @@ const FAQ = lazy(() => import("@/components/sections/FAQ"));
 const About = lazy(() => import("@/components/sections/About"));
 const Contact = lazy(() => import("@/components/sections/Contact"));
 
-// UI components pequenos — carregados no bundle principal (sem overhead perceptível)
-import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
-import ScrollProgress from "@/components/ui/ScrollProgress";
-import NoiseOverlay from "@/components/ui/NoiseOverlay";
-import Preloader from "@/components/ui/Preloader";
-
-/** Fallback mínimo enquanto os chunks assíncronos carregam. */
 function SectionSkeleton() {
-  return <div className="min-h-screen bg-fiuza-cream" aria-hidden="true" />;
+  return <div className="min-h-[50dvh] bg-fiuza-cream" aria-hidden="true" />;
 }
 
 export default function App() {
@@ -33,17 +30,23 @@ export default function App() {
         <NoiseOverlay />
         <ScrollProgress />
         <Navbar />
-        <Suspense fallback={<SectionSkeleton />}>
-          <Hero />
-          <SocialProof />
-          <Fleet />
-          <Services />
-          <VehicleFinder />
-          <FAQ />
-          <About />
-          <Contact />
-        </Suspense>
+
+        <ErrorBoundary>
+          <Suspense fallback={<SectionSkeleton />}>
+            <Hero />
+            <SocialProof />
+            <Fleet />
+            <Services />
+            <VehicleFinder />
+            <FAQ />
+            <About />
+            <Contact />
+          </Suspense>
+        </ErrorBoundary>
+
         <FloatingWhatsApp />
+        {/* D9 — Banner de consentimento LGPD */}
+        <LgpdBanner />
       </main>
     </SmoothScrollWrapper>
   );

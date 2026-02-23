@@ -1,13 +1,47 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+
+    <!-- SEO Primário -->
+    <title>Fiuza Transportes — Logística Inteligente em São Paulo</title>
+    <meta name="description" content="Transportadora especializada em carga seca, logística industrial e mudanças. Atendemos todo o Brasil a partir de São Paulo. Cotação em até 30 minutos." />
+    <meta name="theme-color" content="#1034A6" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fiuza Transportes — Logística Inteligente" />
+    <meta property="og:description" content="Soluções logísticas sob medida para sua empresa. Frota moderna, rastreamento 24h e seguro total." />
+    <meta property="og:locale" content="pt_BR" />
+
+    <!-- Structured Data: LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MovingCompany",
+      "name": "Fiuza Transportes",
+      "description": "Transportadora especializada em logística industrial, carga seca e mudanças.",
+      "url": "https://fiuzatransportes.com.br",
+      "telephone": "+5511999999999",
+      "email": "comercial@fiuza.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rodovia Anhanguera, km 25",
+        "addressLocality": "São Paulo",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": "BR",
+      "openingHours": "Mo-Fr 07:00-18:00"
+    }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

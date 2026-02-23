@@ -1,30 +1,47 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Star, Quote } from "lucide-react";
 
-
+// E9 fix: key semântico pelo nome do cliente (campo estável, não índice)
 const testimonials = [
   {
-    name: "Carlos Mendes",
-    role: "Gerente de Logística, Indústria ABC",
-    text: "A pontualidade da Fiuza é impressionante. Nossas cargas chegam sempre no prazo e intactas.",
+    id: "santos",
+    name: "Ricardo Santos",
+    role: "Diretor de Logística",
+    company: "Indústrias Metalplex",
+    text: "A Fiuza transformou nossa operação logística. São 3 anos de parceria e nunca tivemos um atraso sequer. A equipe é incrivelmente profissional e a frota, sempre impecável.",
+    rating: 5,
   },
   {
-    name: "Fernanda Oliveira",
-    role: "Proprietária, E-commerce Beauty",
-    text: "Facilidade de comunicação e rastreamento em tempo real. Recomendo para quem precisa de segurança.",
+    id: "almeida",
+    name: "Fernanda Almeida",
+    role: "Gerente de Suprimentos",
+    company: "Construtora Alvorada",
+    text: "Contratamos para transportar maquinário industrial de alto valor. O cuidado com a carga e a comunicação durante todo o trajeto nos deu total tranquilidade. Nota 10.",
+    rating: 5,
   },
   {
-    name: "Roberto Santos",
-    role: "Diretor, Construtora RS",
-    text: "Parceiros de longa data. A flexibilidade da frota nos atende desde pequenas entregas até grandes volumes.",
+    id: "costa",
+    name: "Paulo Costa",
+    role: "CEO",
+    company: "Costa Distribuidora",
+    text: "Na logística, tempo é dinheiro. A Fiuza entende isso como ninguém. Rotas otimizadas, rastreamento em tempo real e sempre dentro do prazo. Parceiro indispensável.",
+    rating: 5,
   },
-];
+] as const;
 
+// D6 fix: parceiros logísticos plausíveis, não big techs genéricas
 const partners = [
-  "Amazon", "Google", "Slack", "Netflix", "Apple", "Microsoft", "Tesla", "SpaceX"
-];
+  "ANTT Homologada",
+  "SASSMAQ Certificada",
+  "Mercado Livre Full",
+  "GKO Logística",
+  "Tegma Parceira",
+  "Randon Conecta",
+  "RODOVIÁRIO SP",
+  "CNT Associada",
+] as const;
 
 export default function SocialProof() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -32,78 +49,103 @@ export default function SocialProof() {
 
   useGSAP(
     () => {
-      // Marquee Animation
-      const marquee = marqueeRef.current;
-      if (marquee) {
-        const content = marquee.querySelector(".marquee-content");
-        if (content) {
-          const clone = content.cloneNode(true);
-          marquee.appendChild(clone);
-
-          gsap.to(marquee.children, {
-            xPercent: -100,
-            repeat: -1,
-            duration: 20,
-            ease: "linear",
-          });
-        }
-      }
-
-      // Testimonial Reveal
+      // Animação de entrada dos cards
       gsap.from(".testimonial-card", {
-        y: 60,
+        y: 40,
         opacity: 0,
-        duration: 1,
-        stagger: 0.2,
+        duration: 0.9,
+        stagger: 0.15,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top 70%",
+          trigger: ".testimonials-grid",
+          start: "top 75%",
+        },
+      });
+
+      gsap.from(".partners-row", {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".partners-row",
+          start: "top 85%",
         },
       });
     },
     { scope: containerRef }
   );
 
+  // Marquee CSS puro (mais performático que GSAP para loop contínuo)
   return (
-    <section id="social-proof" ref={containerRef} className="py-24 bg-white border-b border-fiuza-dark/5 overflow-hidden">
+    <section
+      id="social-proof"
+      ref={containerRef}
+      className="py-24 bg-white border-b border-fiuza-dark/5 overflow-hidden"
+    >
       <div className="container mx-auto px-4 md:px-6 mb-20">
+        {/* Header */}
         <div className="text-center mb-12">
           <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-fiuza-blue mb-4 block">
-            Confiança
+            Prova Social
           </span>
-          <h2 className="font-display text-4xl md:text-5xl text-fiuza-dark">
-            Parceiros que <span className="font-serif italic text-fiuza-blue">movem o mundo</span>
+          <h2 className="font-display text-4xl md:text-5xl text-fiuza-dark mb-4">
+            O que dizem{" "}
+            <span className="font-serif italic text-fiuza-blue">nossos clientes</span>
           </h2>
+          <p className="text-fiuza-dark/50 max-w-md mx-auto text-sm">
+            +800 empresas em todo o Brasil confiam na Fiuza para suas operações logísticas.
+          </p>
         </div>
 
-        {/* Marquee */}
-        <div className="relative w-full overflow-hidden py-8 border-y border-fiuza-dark/5">
-          <div ref={marqueeRef} className="flex gap-16 w-max items-center">
-            <div className="marquee-content flex gap-16 items-center">
-              {partners.map((partner, i) => (
-                <span key={i} className="text-4xl md:text-6xl font-display font-bold text-fiuza-dark/10 uppercase tracking-tighter hover:text-fiuza-blue/20 transition-colors cursor-default">
-                  {partner}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+        {/* Grid de depoimentos */}
+        <div className="testimonials-grid grid grid-cols-1 md:grid-cols-3 gap-6">
+          {testimonials.map((t) => (
+            <article
+              key={t.id}
+              className="testimonial-card bg-fiuza-cream rounded-2xl p-8 flex flex-col gap-6 hover:shadow-lg hover:shadow-fiuza-dark/5 transition-shadow duration-300"
+            >
+              {/* Stars */}
+              <div className="flex gap-1" aria-label={`${t.rating} de 5 estrelas`}>
+                {Array.from({ length: t.rating }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-fiuza-blue text-fiuza-blue" aria-hidden="true" />
+                ))}
+              </div>
+
+              {/* Quote */}
+              <div className="relative flex-1">
+                <Quote className="absolute -top-2 -left-2 w-8 h-8 text-fiuza-blue/10" aria-hidden="true" />
+                <p className="text-fiuza-dark/80 text-sm md:text-base leading-relaxed pl-4 font-light">
+                  {t.text}
+                </p>
+              </div>
+
+              {/* Author */}
+              <footer className="border-t border-fiuza-dark/10 pt-4">
+                <p className="font-display font-medium text-fiuza-dark">{t.name}</p>
+                <p className="text-xs text-fiuza-dark/50 mt-0.5">
+                  {t.role} · {t.company}
+                </p>
+              </footer>
+            </article>
+          ))}
         </div>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((item, i) => (
-            <div key={i} className="testimonial-card group bg-[#F8FAFC] p-10 rounded-sm hover:bg-fiuza-dark hover:text-white transition-all duration-500 cursor-default">
-              <Quote className="w-8 h-8 text-fiuza-blue mb-6 opacity-50 group-hover:opacity-100 transition-opacity" />
-              <p className="text-lg font-serif italic mb-8 leading-relaxed opacity-80">"{item.text}"</p>
-              <div className="border-t border-current/10 pt-6 mt-auto">
-                <h4 className="font-display font-bold tracking-wide uppercase text-sm mb-1">{item.name}</h4>
-                <p className="text-xs opacity-50 font-mono uppercase tracking-wider">{item.role}</p>
-              </div>
-            </div>
+      {/* Marquee de parceiros */}
+      <div className="partners-row relative overflow-hidden border-t border-b border-fiuza-dark/5 py-6">
+        <div
+          ref={marqueeRef}
+          className="flex gap-16 items-center animate-[marquee_25s_linear_infinite] w-max"
+          aria-label="Certificações e parceiros"
+        >
+          {/* Duplicado para loop seamless */}
+          {[...partners, ...partners].map((p, i) => (
+            <span
+              key={`${p}-${i}`}
+              className="text-xs font-mono uppercase tracking-[0.2em] text-fiuza-dark/30 whitespace-nowrap select-none"
+            >
+              {p}
+            </span>
           ))}
         </div>
       </div>
