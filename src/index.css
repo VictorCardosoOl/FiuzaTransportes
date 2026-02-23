@@ -1,20 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-fiuza-blue: #1034A6;
-  --color-fiuza-dark: #0F1115;
-  --color-fiuza-cream: #F7F7F5;
-  --color-fiuza-light: #E5E5E5;
+  /* Paleta Light/Awards — clara, elegante, editorial */
+  --color-fiuza-blue: #0B2FCC;
+  /* Royal Blue — mais vibrante e sofisticado */
+  --color-fiuza-dark: #0A0A0F;
+  /* Near Black — máximo contraste sem ser agressivo */
+  --color-fiuza-cream: #F9F8F6;
+  /* Off-White — quente, refinado, não FFFF */
+  --color-fiuza-light: #EEEDE9;
+  /* Warm Gray — fundo de seções alternadas */
+  --color-fiuza-fog: #F3F2EF;
+  /* Fog White — para cards e surfaces */
 
+  /* Sistema tipográfico editorial (não alterado) */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
 
-  /* Animações personalizadas */
+  /* Animações */
   --animate-marquee: marquee 25s linear infinite;
 }
 
-/* Keyframe do marquee para SocialProof */
+/* Marquee — SocialProof */
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -38,9 +46,16 @@
     transform: rotateY(180deg);
   }
 
-  /* Pausa a animação no hover por acessibilidade */
-  .marquee-pause:hover .animate-\[marquee_25s_linear_infinite\] {
+  /* Pausa o marquee no hover (acessibilidade) */
+  .marquee-pause:hover * {
     animation-play-state: paused;
+  }
+
+  /* Utilitário para gradiente de texto */
+  .text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -62,25 +77,21 @@
     @apply text-pretty;
   }
 
-  /* D7 — Dark mode respeitando preferência do sistema */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-fiuza-cream: #111318;
-      --color-fiuza-dark: #F0F0EE;
-      --color-fiuza-light: #2A2D35;
-    }
-
-    /* Seletores que usam cores fixas precisam de override */
-    .bg-white {
-      background-color: #1A1D24 !important;
-    }
-
-    .bg-white\/5 {
-      background-color: rgba(255, 255, 255, 0.03) !important;
-    }
+  /* Scrollbar elegante */
+  ::-webkit-scrollbar {
+    width: 3px;
   }
 
-  /* Respeito explícito ao prefers-reduced-motion */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-fiuza-blue);
+    border-radius: 99px;
+  }
+
+  /* prefers-reduced-motion — acessibilidade sem dark mode automático */
   @media (prefers-reduced-motion: reduce) {
 
     *,

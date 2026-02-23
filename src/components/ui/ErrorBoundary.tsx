@@ -1,7 +1,7 @@
 import { Component, type ReactNode, type ErrorInfo } from "react";
 
 type Props = {
-    children: ReactNode;
+    children?: ReactNode;
     fallback?: ReactNode;
 };
 
@@ -13,23 +13,33 @@ type State = {
 /**
  * Error Boundary para capturar erros de renderização e falhas de chunk (React.lazy).
  * Sem isso, um erro numa section derruba toda a árvore React e exibe tela branca.
+ *
+ * Nota de implementação: uso de construtor explícito + inicialização manual do state
+ * por compatibilidade com `useDefineForClassFields: false` no tsconfig.
  */
 export class ErrorBoundary extends Component<Props, State> {
-    // Inicialização direta sem `override` para evitar conflito com tsconfig
-    state: State = { hasError: false, error: null };
+    declare state: State;
+    declare props: Readonly<Props>;
+
+    constructor(props: Props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
 
     static getDerivedStateFromError(error: Error): State {
         return { hasError: true, error };
     }
 
     componentDidCatch(error: Error, info: ErrorInfo) {
-        // Substituir por Sentry/DataDog em produção
         console.error("[ErrorBoundary] Uncaught error:", error, info.componentStack);
     }
 
     render() {
-        if (this.state.hasError) {
-            if (this.props.fallback) return this.props.fallback;
+        const { hasError } = this.state;
+        const { fallback, children } = this.props;
+
+        if (hasError) {
+            if (fallback) return fallback;
 
             return (
                 <div
@@ -53,6 +63,6 @@ export class ErrorBoundary extends Component<Props, State> {
             );
         }
 
-        return this.props.children;
+        return children ?? null;
     }
 }
